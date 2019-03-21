@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=talks_tue
+POSTGRES_USER=KkCBuMKZeHcqmogrIZgHGcuLdQCnlCGr
+POSTGRES_PASSWORD=agJmg2tEu3lC1yQypIN4ieDaezvRnOL7LG5BRb2jC3bVN28JJP8EVU6pyZGBxDnv
