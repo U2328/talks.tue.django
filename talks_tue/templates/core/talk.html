@@ -1,0 +1,62 @@
+{% extends '../base.html' %}
+{% load markdownify %}
+{% load i18n %}
+{% block content %}
+<div class="container-fluid pt-2">
+    <div class="row">
+        <div class="col-lg-8 col-sm-12 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4>{{ talk.title }}</h4>
+                </div>
+                <div class="card-body row">
+                    <div class="col-md-3">
+                        <table class="table table-striped table-bordered table-sm rounded">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">{% blocktrans %}Speaker's name{% endblocktrans %}</th>
+                                    <td>{{ talk.name }}</td>
+                                </tr>
+                                <tr class="{% if overdue %}table-danger{% endif %}">
+                                    <th scope="row">{% blocktrans %}Date{% endblocktrans %}</th>
+                                    <td>{{ talk.timestamp }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">{% trans "Collections" noop %}</th>
+                                    <td>
+                                        <ul class="list-unstyled mb-0">
+                                            {% for collection in talk.collections.all %}
+                                                <li><a href="#">{{ collection.title }}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">{% blocktrans %}Tags{% endblocktrans %}</th>
+                                    <td>{% for tag in talk.tags.all %}{% include 'snippets/tag.html' with tag=tag %}{% endfor %}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-9 mx-auto">
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info" aria-selected="true">{% blocktrans %}Description{% endblocktrans %}</a>
+                                <a class="nav-item nav-link" id="speaker-tab" data-toggle="tab" href="#speaker" role="tab" aria-controls="profile" aria-selected="false">{% blocktrans %}Speaker's about me{% endblocktrans %}</a>
+                            </div>
+                        </nav>
+                        <div class="tab-content pt-2">
+                            <div class="tab-pane show active" id="info" role="tabpanel" aria-labelledby="info-tab">
+                                <p class="md">{{ talk.description | escape | markdownify }}</p>
+                            </div>
+                            <div class="tab-pane" id="speaker" role="tabpanel" aria-labelledby="speaker-tab">
+                                <p class="md">{{ talk.about_me | escape | markdownify }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

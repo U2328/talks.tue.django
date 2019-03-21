@@ -3,6 +3,7 @@ Base settings to build other settings files upon.
 """
 
 import environ
+from django.contrib import messages
 
 ROOT_DIR = (
     environ.Path(__file__) - 3
@@ -67,10 +68,11 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "rest_framework",
+    'markdownx',
 ]
 LOCAL_APPS = [
     "talks_tue.users.apps.UsersAppConfig",
-    # Your stuff: custom apps go here
+    "talks_tue.core.apps.CoreConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -255,3 +257,26 @@ SOCIALACCOUNT_ADAPTER = "talks_tue.users.adapters.SocialAccountAdapter"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+# Markdown
+MARKDOWNIFY_MARKDOWN_EXTENSIONS = MARKDOWNX_MARKDOWN_EXTENSIONS = [
+    "markdown.extensions.sane_lists",
+    "markdown.extensions.nl2br",
+    "markdown.extensions.codehilite",
+    "pymdownx.extra",
+    "pymdownx.arithmatex",
+    "pymdownx.smartsymbols",
+]
+MARKDOWNIFY_MARKDOWN_EXTENSION_CONFIGS = MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
+    "pymdownx.arithmatex": {
+        "generic": True,
+    }
+}
+
+# django-messages
+MESSAGE_TAGS = {
+    messages.DEBUG: 'dark',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'danger',
+    messages.ERROR: 'warning',
+}

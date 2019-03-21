@@ -22,10 +22,13 @@
     
 
     <!-- Your stuff: Third-party CSS libraries go here -->
-    
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.0/css/all.css" integrity="sha384-Mmxa0mLqhmOeaE8vgOSbKacftZcsNYDjQzuCOm6D02luYSzBG8vpaOykv9lFQ51Y" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.css" integrity="sha384-dbVIfZGuN1Yq7/1Ocstc1lUEm+AT+/rCkibIcC/OmWo5f0EA48Vf8CytHzGrSwbQ" crossorigin="anonymous">
+
     <!-- This file stores project-specific CSS -->
     
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
+    <link href="{% static 'css/pygments-theme.css' %}" rel="stylesheet">
     
     
     {% endblock %}
@@ -35,58 +38,60 @@
   <body>
 
     <div class="mb-1">
-      <nav class="navbar navbar-expand-md navbar-light bg-light">
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand" href="{% url 'home' %}">Talks.Tue</a>
+        <a class="navbar-brand" href="{% url 'index' %}"><i class="fas fa-university"></i> Talks.tue</a>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="{% url 'index' %}">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'about' %}">About</a>
+              <a class="nav-link" href="#">About</a>
             </li>
-            {% if request.user.is_authenticated %}
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
-              </li>
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
-              </li>
-            {% else %}
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
-              </li>
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
-              </li>
-            {% endif %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="account-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                <div class="dropdown-menu" aria-labelledby="account-dropdown">
+                  {% if request.user.is_authenticated %}
+                    {# URL provided by django-allauth/account/urls.py #}
+                    <a class="dropdown-item" href="{% url 'users:detail' request.user.username  %}">{% trans "My Profile" %}</a>
+                    {# URL provided by django-allauth/account/urls.py #}
+                    <a class="dropdown-item" href="{% url 'account_logout' %}">{% trans "Sign Out" %}</a>
+                  {% else %}
+                    {# URL provided by django-allauth/account/urls.py #}
+                    <a id="sign-up-link" class="dropdown-item" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
+                    {# URL provided by django-allauth/account/urls.py #}
+                    <a id="log-in-link" class="dropdown-item" href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
+                  {% endif %}
+                </div>
+            </li>
           </ul>
         </div>
       </nav>
-
+      {% if messages %}
+        <div class="messages container-fluid pt-2 position-absolute" style="z-index:9999;">
+            <div class="col-lg-10 col-sm-12 mx-auto">
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+      {% endif %}
     </div>
 
-    <div class="container">
-
-      {% if messages %}
-          {% for message in messages %}
-              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
-          {% endfor %}
-      {% endif %}
-
-      {% block content %}
-        <p>Use this document as a way to quick start any new project.</p>
-      {% endblock content %}
-
-    </div> <!-- /container -->
+    {% block content %}
+      <div class="container-fluid"><p>Use this document as a way to quick start any new project.</p></div>
+    {% endblock content %}
 
     {% block modal %}{% endblock modal %}
 
@@ -101,7 +106,7 @@
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
       <!-- Your stuff: Third-party javascript libraries go here -->
-      
+      <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.1/dist/katex.min.js" integrity="sha384-2BKqo+exmr9su6dir+qCw08N2ZKRucY4PrGQPPWU1A7FtlCGjmEGFqXCv5nyM5Ij" crossorigin="anonymous"></script>
 
       <!-- place project specific Javascript in this file -->
       
