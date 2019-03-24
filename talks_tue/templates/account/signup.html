@@ -7,8 +7,6 @@
 {% block card_title %}{% trans "Sign Up" %}{% endblock %}
 
 {% block card_body %}
-<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
-
 <form id="signupForm" class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
   {% csrf_token %}
   {{ form|crispy }}
@@ -20,6 +18,10 @@
 {% endblock %}
 
 {% block card_footer %}
-  <button class="btn btn-primary" type="submit" form="signupForm">{% trans "Sign Up" %} &raquo;</button>
+  <button class="btn btn-primary" type="submit" form="signupForm">{% trans "Sign Up" %}</button>
+  <div class="text-muted float-right">
+    <small>Already have an account? &raquo;</small>&nbsp;&nbsp;
+    <a class="btn btn-secondary" href="{{ login_url }}">{% trans "Sign In" %}</a>
+  </div>
 {% endblock %}
 

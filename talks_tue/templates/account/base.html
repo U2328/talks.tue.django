@@ -10,9 +10,11 @@
               <h4>{% block card_title %}{% endblock %}</h4>
             </div>
             {% block card_body_override %}
+              {% block card_pre_body %}{% endblock %}
               <div class="card-body">
-                {% block card_body %}{% endblock %}
+                  {% block card_body %}{% endblock %}
               </div>
+              {% block card_post_body %}{% endblock %}
             {% endblock %}
           </div>
         </div>
