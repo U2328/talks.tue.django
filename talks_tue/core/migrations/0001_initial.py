@@ -110,18 +110,6 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'talks',
             },
         ),
-        migrations.CreateModel(
-            name='UserProfile',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('clearance_level', models.IntegerField(verbose_name='Clearance level')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User')),
-            ],
-            options={
-                'verbose_name': 'userprofile',
-                'verbose_name_plural': 'userprofiles',
-            },
-        ),
         migrations.AddField(
             model_name='tag',
             name='talks',

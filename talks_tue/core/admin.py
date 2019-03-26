@@ -2,7 +2,7 @@ from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
-from .models import Talk, Collection, Tag, UserProfile, Subscription
+from .models import Talk, Collection, Tag, Subscription
 
 
 class MarkdownModelAdmin(MarkdownxModelAdmin):
@@ -32,5 +32,4 @@ class CollectionAdmin(MarkdownModelAdmin, SimpleHistoryAdmin):
 
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(Tag)
-admin.site.register(UserProfile)
 admin.site.register(Subscription)

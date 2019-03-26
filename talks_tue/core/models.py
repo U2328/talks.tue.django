@@ -7,7 +7,7 @@ from markdownx.models import MarkdownxField
 from simple_history.models import HistoricalRecords
 
 
-__all__ = ("Talk", "Collection", "Tag", "UserProfile", "Subscription")
+__all__ = ("Talk", "Collection", "Tag", "Subscription")
 
 
 class Talk(models.Model):
@@ -55,18 +55,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class UserProfile(models.Model):
-    class Meta:
-        verbose_name = _("userprofile")
-        verbose_name_plural = _("userprofiles")
-
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
-    clearance_level = models.IntegerField(verbose_name=_("Clearance level"))
-
-    def __str__(self):
-        return self.user.username
 
 
 class Subscription(models.Model):

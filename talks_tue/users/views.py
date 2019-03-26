@@ -1,52 +1,27 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse
-from django.views.generic import DetailView, ListView, RedirectView, UpdateView
+from django.contrib import messages
+from django.contrib.auth.views import LoginView as BaseLoginView
+from django.contrib.auth.views import LogoutView as BaseLogoutView
+from django.views.generic import FormView
+from django.utils.translation import gettext_lazy as _
 
-User = get_user_model()
-
-
-class UserDetailView(LoginRequiredMixin, DetailView):
-
-    model = User
-    slug_field = "username"
-    slug_url_kwarg = "username"
+from .forms import AuthenticationForm
 
 
-user_detail_view = UserDetailView.as_view()
+class LoginView(BaseLoginView):
+    template_name = "users/login.html"
+    form_class = AuthenticationForm
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, _("Logged in as, %(username)s.") % {"username": self.request.user.username})
+        return response
 
 
-class UserListView(LoginRequiredMixin, ListView):
-
-    model = User
-    slug_field = "username"
-    slug_url_kwarg = "username"
-
-
-user_list_view = UserListView.as_view()
-
-
-class UserUpdateView(LoginRequiredMixin, UpdateView):
-
-    model = User
-    fields = ["name"]
-
-    def get_success_url(self):
-        return reverse("users:detail", kwargs={"username": self.request.user.username})
-
-    def get_object(self):
-        return User.objects.get(username=self.request.user.username)
-
-
-user_update_view = UserUpdateView.as_view()
-
-
-class UserRedirectView(LoginRequiredMixin, RedirectView):
-
-    permanent = False
-
-    def get_redirect_url(self):
-        return reverse("users:detail", kwargs={"username": self.request.user.username})
-
-
-user_redirect_view = UserRedirectView.as_view()
+class LogoutView(BaseLogoutView):
+    template_name = "users/login.html"
+    redirect_authnticated_user = True
+    
+    def get(self, request, *args, **kwargs):
+        messages.success(request, _("Logged out."))
+        return super().get(request, *args, **kwargs)
+    

@@ -1,17 +1,33 @@
 from django.contrib import admin
-from django.contrib.auth import admin as auth_admin
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from talks_tue.users.forms import UserChangeForm, UserCreationForm
+from .models import User
+from .forms import UserCreationForm, UserChangeForm
 
-User = get_user_model()
 
-
-@admin.register(User)
-class UserAdmin(auth_admin.UserAdmin):
-
+class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
-    fieldsets = (("User", {"fields": ("name",)}),) + auth_admin.UserAdmin.fieldsets
-    list_display = ["username", "name", "is_superuser"]
-    search_fields = ["name"]
+
+    list_display = ('username', 'is_admin',)
+    list_filter = ('is_admin',)
+    fieldsets = (
+        (None, {'fields': ('username', 'password', 'email')}),
+        ('User Role & Account Management', {'fields': ('is_admin',)}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('username', 'email', 'is_admin', 'password1', 'password2')}
+         ),
+    )
+    search_fields = ('username',)
+    ordering = ('-id',)
+    filter_horizontal = ()
+    readonly_fields = ('last_login', 'date_joined',)
+
+
+admin.site.register(User, UserAdmin)
+admin.site.unregister(Group)
