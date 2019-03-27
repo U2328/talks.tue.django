@@ -6,70 +6,69 @@
 {% block content %}
 <div class="container-fluid">
     <div class="row pt-3">
-        <div class="col-md-10 mx-auto border-bottom">
-            <h2>{{ talk.title }}</h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4 mx-auto pt-3">
-            <div class="card border-dark">
-                <div class="card-header h-50 p-2 pl-3">
-                    <h4 class="mb-0"><i class="fas fa-info-circle"></i> {% trans "Info" %}</h4>
-                </div>
-                <div class="card-body p-0">
-                    <table class="table table-striped table-bordered table-sm mb-0">
-                        <tbody>
-                            <tr>
-                                <th scope="row">{% trans "Speaker’s name" %}</th>
-                                <td>{{ talk.name }}</td>
-                            </tr>
-                            <tr class="{% if overdue %}table-danger{% endif %}">
-                                <th scope="row">{% blocktrans %}Date{% endblocktrans %}</th>
-                                <td>{{ talk.timestamp }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">{% trans "Collections" %}</th>
-                                <td>
-                                    <ul class="list-unstyled mb-0">
-                                        {% for collection in talk.collections.all %}
-                                            <li><a href="#">{{ collection.title }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">{% blocktrans %}Tags{% endblocktrans %}</th>
-                                <td>{% for tag in talk.tags.all %}{% include 'snippets/tag.html' with tag=tag %}{% endfor %}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div class="col-xs-11 col-md-10 col-lg-9 mx-auto">
+            <div class="row border-bottom">
+                <h2 class="text-center">{{ talk.title }}</h2>
             </div>
-        </div>
-        <div class="col-md-8 col-lg-7 mx-auto pt-3">
-            <div class="card border-dark">
-                <div class="card-header">
-                    <ul class="nav nav-tabs card-header-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab" aria-controls="description" aria-selected="true">
-                                <i class="fab fa-readme"></i>
-                                {% trans "Description" %}
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="speaker-tab" data-toggle="tab" href="#speaker" role="tab" aria-controls="speaker" aria-selected="false">
-                                <i class="fas fa-chalkboard-teacher"></i>
-                                {% trans "Speaker’s about me" %}
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-body tab-content pt-2">
-                    <div class="tab-pane active show" id="description" role="tabpanel" aria-labelledby="description-tab">
-                        <p class="md">{{ talk.description | escape | markdownify }}</p>
+            <div class="row">
+                <div class="col-lg-5 col-xl-4 pt-3">
+                    <div class="card border-dark">
+                        <div class="card-header h-50 p-2 pl-3">
+                            <h4 class="mb-0"><i class="fas fa-info-circle"></i>&nbsp;{% trans "Info" %}</h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <small class="text-muted">{% trans "Speaker’s name:" %}</small>&nbsp;<span class="h6">{{ talk.name }}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <small class="text-muted">{% trans "Date:" %}</small>&nbsp;<span class="h6">{{ talk.timestamp }}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <small class="text-muted">{% trans "Tags:" %}</small>&nbsp;<span class="h6">{% for tag in talk.tags.all %}{% include 'snippets/tag.html' with tag=tag %}{% endfor %}</span>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="tab-pane" id="speaker" role="tabpanel" aria-labelledby="speaker-tab">
-                        <p class="md">{{ talk.about_me | escape | markdownify }}</p>
+                    {% if talk.collections.exists %}
+                        <div class="card border-dark mt-2">
+                            <div class="card-header h-50 p-2 pl-3">
+                                <h4 class="mb-0"><i class="fas fa-list"></i>&nbsp;{% trans "Collections" %}</h4>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                {% for collection in talk.collections.all %}
+                                    <li class="list-group-item">
+                                        <a href="{% url 'core:collection' pk=collection.pk %}">{{ collection.title }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-lg-7 col-xl-8 pt-3">
+                    <div class="card border-dark">
+                        <div class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="description-tab" data-toggle="tab" href="#description" role="tab" aria-controls="description" aria-selected="true">
+                                        <i class="fab fa-readme"></i>
+                                        {% trans "Description" %}
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="speaker-tab" data-toggle="tab" href="#speaker" role="tab" aria-controls="speaker" aria-selected="false">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                        {% trans "Speaker’s about me" %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body tab-content pt-2">
+                            <div class="tab-pane active show" id="description" role="tabpanel" aria-labelledby="description-tab">
+                                <p class="md">{{ talk.description | markdownify | escape }}</p>
+                            </div>
+                            <div class="tab-pane" id="speaker" role="tabpanel" aria-labelledby="speaker-tab">
+                                <p class="md">{{ talk.about_me | markdownify | escape }}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

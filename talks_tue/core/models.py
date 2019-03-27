@@ -33,16 +33,36 @@ class Collection(models.Model):
 
     title = models.CharField(verbose_name=_("Title"), max_length=32)
     description = MarkdownxField(verbose_name=_("Description"), max_length=512)
-    talks = models.ManyToManyField(
-        "Talk", verbose_name=_("Talks"), related_name="collections"
+    organizer = models.ForeignKey(
+        settings.AUTH_USER_MODEL, models.SET_NULL, null=True, blank=True, verbose_name=_("Oragnizer"), related_name="orgnized_collections"
     )
     editors = models.ManyToManyField(
         settings.AUTH_USER_MODEL, verbose_name=_("Editors"), related_name="edited_collections"
     )
+    is_meta = models.BooleanField(verbose_name=_("Is metacollection?"), default=False)
     history = HistoricalRecords()
+
+    talks = models.ManyToManyField(
+        "Talk", null=True, blank=True, verbose_name=_("Talks"), related_name="collections"
+    )
+    sub_collections = models.ManyToManyField(
+        "Collection", null=True, blank=True, verbose_name=_("Subcollections"), related_name="meta_collections"
+    )
+
+    def save(self, *args, **kwargs):
+        if self.is_meta:
+            self.talks.clear()
+            self.sub_collections.remove(self)
+        else:
+            self.sub_collections.clear()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
+
+    @property
+    def tags(self):
+        return list(set(tag for talk in self.talks.all() for tag in talk.tags.all()))
 
 
 class Tag(models.Model):

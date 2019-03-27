@@ -1,7 +1,7 @@
 from functools import partial
 
 from django.conf import settings
-from django.utils.safestring import mark_safe
+from django.utils.html import strip_tags, mark_safe, conditional_escape
 
 import markdown
 import bleach
@@ -20,6 +20,6 @@ def markdownify(text):
     extension_configs = getattr(settings, 'MARKDOWNIFY_MARKDOWN_EXTENSION_CONFIGS', [])
 
     # Convert markdown to html
-    html = markdown.markdown(text, extensions=extensions, extension_configs=extension_configs)
+    html = markdown.markdown(strip_tags(text), extensions=extensions, extension_configs=extension_configs)
 
     return mark_safe(html)

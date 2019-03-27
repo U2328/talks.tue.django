@@ -19,7 +19,6 @@ class LoginView(BaseLoginView):
 
 class LogoutView(BaseLogoutView):
     template_name = "users/login.html"
-    redirect_authnticated_user = True
     
     def get(self, request, *args, **kwargs):
         messages.success(request, _("Logged out."))
