@@ -65,6 +65,7 @@ THIRD_PARTY_APPS = [
     "crispy_forms",
     "rest_framework",
     'markdownx',
+    'sequences.apps.SequencesConfig',
 ]
 LOCAL_APPS = [
     "talks_tue.core.apps.CoreConfig",

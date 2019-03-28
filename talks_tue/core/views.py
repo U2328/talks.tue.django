@@ -29,7 +29,7 @@ def talk(request, pk):
 
 
 def collection(request, pk):
-    collection = get_object_or_404(Collection, pk=pk)
+    collection = get_object_or_404(Collection, collection_id=pk)
     return render(
         request, "core/collection.html", context={
             "now": now(),

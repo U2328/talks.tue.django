@@ -2,7 +2,7 @@ from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
-from .models import Talk, Collection, Tag, Subscription
+from .models import Talk, Collection, MetaCollection, Tag
 
 
 class MarkdownModelAdmin(MarkdownxModelAdmin):
@@ -19,17 +19,24 @@ class MarkdownModelAdmin(MarkdownxModelAdmin):
         }
 
 
+@admin.register(Talk)
 class TalkAdmin(MarkdownModelAdmin, SimpleHistoryAdmin):
     ...
 
-
-admin.site.register(Talk, TalkAdmin)
-
-
+@admin.register(Collection, MetaCollection)
 class CollectionAdmin(MarkdownModelAdmin, SimpleHistoryAdmin):
-    ...
+    list_display = (
+        'collection_id',
+        'title',
+        'description',
+        'organizer',
+    )
+    fieldsets = (
+        (None, {'fields': ('title', 'description')}),
+        ('Related Users', {'fields': ('organizer', 'editors')}),
+        ('Related Collections', {'fields': ('meta_collections',)}),
+    )
+    list_filter = ('organizer', 'is_meta')
+    raw_id_fields = ('editors', 'meta_collections')
 
-
-admin.site.register(Collection, CollectionAdmin)
 admin.site.register(Tag)
-admin.site.register(Subscription)

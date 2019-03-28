@@ -2,6 +2,8 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 
 __all__ = (
@@ -50,3 +52,21 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.username
+
+
+class Subscription(models.Model):
+    class Meta:
+        verbose_name = _("subscription")
+        verbose_name_plural = _("subscriptions")
+
+    limit = models.Q(app_label='core', model='Collection') |\
+            models.Q(app_label='core', model='MetaCollection')
+    collection_type = models.ForeignKey(ContentType, limit_choices_to=limit, on_delete=models.CASCADE, related_name="subscriptions")
+    collection_pk = models.PositiveIntegerField()
+    collection = GenericForeignKey('collection_type', 'collection_pk')
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
+    remind_me = models.BooleanField(_("Remind me"))
+
+    def __str__(self):
+        return f"{self.user} -x- {self.collection}"

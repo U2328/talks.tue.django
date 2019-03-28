@@ -1,11 +1,23 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.contenttypes.admin import GenericInlineModelAdmin
 
-from .models import User
+from .models import User, Subscription
 from .forms import UserCreationForm, UserChangeForm
 
 
+
+@admin.register(Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'user',
+        'collection',
+    )
+
+
+@admin.register(User)
 class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
@@ -29,5 +41,4 @@ class UserAdmin(BaseUserAdmin):
     readonly_fields = ('last_login', 'date_joined',)
 
 
-admin.site.register(User, UserAdmin)
 admin.site.unregister(Group)

@@ -28,3 +28,4 @@ django-markdownx>=2.0.28,<3.0
 django-markdownify>=0.8.0,<1.0
 django-simple-history>=2.7.0,<3.0
 django-htmlmin>=0.11.0,<1.0
+django-sequences>=2.2,<3.0
