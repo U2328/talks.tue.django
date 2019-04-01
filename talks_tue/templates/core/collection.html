@@ -1,0 +1,99 @@
+{% extends '../base.html' %}
+{% with True as messages_displace_content %}
+{% endwith %}
+{% load markdownify %}
+{% load i18n %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row pt-3">
+        <div class="col-xs-11 col-md-10 col-lg-9 mx-auto">
+            <div class="row border-bottom">
+                <h2 class="text-center">{{ collection.title }}</h2>
+            </div>
+            <div class="row">
+                <div class="col-lg-5 col-xl-4 pt-3">
+                    <div class="card border-dark">
+                        <div class="card-header h-50 p-2 pl-3">
+                            <h4 class="mb-0"><i class="fas fa-info-circle"></i>&nbsp;{% trans "Info" %}</h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <small class="text-muted">{% trans "Organizers’s username:" %}</small>&nbsp;<span class="h6">{{ collection.organizer.username }}</span>
+                            </li>
+                            <li class="list-group-item">
+                                <small class="text-muted">{% trans "Tags:" %}</small>&nbsp;<span class="h6">{% for tag in collection.tags %}{% include 'snippets/tag.html' with tag=tag %}{% endfor %}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-xl-8 pt-3">
+                    <div class="card border-dark">
+                        <div class="card-header h-50 p-2 pl-3">
+                            <h4 class="mb-0"><i class="fab fa-readme"></i>&nbsp;{% trans "Description" %}</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="md">{{ collection.description | markdownify | escape }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card border-dark mt-2">
+                        <div class="card-header h-50 p-2 pl-3">
+                            <h4 class="mb-0"><i class="fas fa-list"></i>&nbsp;{% if collection.is_meta %}{% trans "Child Collections"%}{% else %}{% trans "Talks" %}{% endif %}</h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            {% if collection.is_meta %}
+                                {% if collection.sub_collections.exists %}
+                                    {% for sub_collection in collection.sub_collections.all %}
+                                    <li class="list-group-item" onclick="window.location='{% url 'core:collection' pk=sub_collection.collection_id %}';" style="cursor: pointer;">
+                                        <span>{{ sub_collection.title }}</span>
+                                    </li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li class="list-group-item">
+                                        <span class="text-muted">{% trans "This collection has no child collections." %}</span>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                {% if collection.talks.exists %}
+                                    {% for talk in collection.talks.all %}
+                                        <li class="list-group-item" onclick="window.location='{% url 'core:talk' pk=talk.pk %}';" style="cursor: pointer;">
+                                            <span>{{ talk.title }} <small class="text-muted">{{ talk.timestamp }}</small></span>
+                                        </li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li class="list-group-item">
+                                        <span class="text-muted">{% trans "This collection contains no talks." %}</span>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card border-dark mt-2">
+                        <div class="card-header h-50 p-2 pl-3">
+                            <h4 class="mb-0"><i class="fas fa-list"></i>&nbsp;{% trans "Parent Collections"%}</h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            {% if collection.meta_collections.exists %}
+                                {% for meta_collection in collection.meta_collections.all %}
+                                    <li class="list-group-item" onclick="window.location='{% url 'core:collection' pk=meta_collection.collection_id %}';" style="cursor: pointer;">
+                                        <span>{{ meta_collection.title }}</span>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="list-group-item">
+                                    <span class="text-muted">{% trans "This collection has no parent collections." %}</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -35,8 +35,8 @@
                             </div>
                             <ul class="list-group list-group-flush">
                                 {% for collection in talk.collections.all %}
-                                    <li class="list-group-item">
-                                        <a href="{% url 'core:collection' pk=collection.pk %}">{{ collection.title }}</a>
+                                    <li class="list-group-item" onclick="window.location='{% url 'core:collection' pk=collection.collection_id %}';" style="cursor: pointer;">
+                                        {{ collection.title }}
                                     </li>
                                 {% endfor %}
                             </ul>

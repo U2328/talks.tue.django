@@ -1,6 +1,5 @@
 from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
-from simple_history.admin import SimpleHistoryAdmin
 
 from .models import Talk, Collection, MetaCollection, Tag
 
@@ -20,11 +19,22 @@ class MarkdownModelAdmin(MarkdownxModelAdmin):
 
 
 @admin.register(Talk)
-class TalkAdmin(MarkdownModelAdmin, SimpleHistoryAdmin):
-    ...
+class TalkAdmin(MarkdownModelAdmin):
+    list_display = (
+        'title',
+        'name',
+        'timestamp',
+    )
+    fieldsets = (
+        ('Talk Info', {'fields': ('title', 'timestamp', 'description')}),
+        ('Speaker Info', {'fields': ('name', 'about_me')}),
+        ('Links', {'fields': ('collections', 'tags')}),
+    )
+    list_filter = tuple()
+    raw_id_fields = tuple()
 
 @admin.register(Collection, MetaCollection)
-class CollectionAdmin(MarkdownModelAdmin, SimpleHistoryAdmin):
+class CollectionAdmin(MarkdownModelAdmin):
     list_display = (
         'collection_id',
         'title',
@@ -37,6 +47,6 @@ class CollectionAdmin(MarkdownModelAdmin, SimpleHistoryAdmin):
         ('Related Collections', {'fields': ('meta_collections',)}),
     )
     list_filter = ('organizer', 'is_meta')
-    raw_id_fields = ('editors', 'meta_collections')
+    raw_id_fields = tuple()
 
 admin.site.register(Tag)

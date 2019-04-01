@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib import messages
+from django.http import Http404
 from django.utils.timezone import now
 from django.utils.translation import gettext as _
 
-from .models import Talk, Collection
+from .models import Talk, Collection, MetaCollection
 
 
 def index(request):
@@ -29,11 +30,25 @@ def talk(request, pk):
 
 
 def collection(request, pk):
-    collection = get_object_or_404(Collection, collection_id=pk)
-    return render(
-        request, "core/collection.html", context={
-            "now": now(),
-            "collection": collection,
-            "talks": collection.talks.order_by('timestamp')
-        }
-    )
+    collection = Collection.objects.filter(collection_id=pk)
+    if not collection.exists():
+        collection = MetaCollection.objects.filter(collection_id=pk)
+    if not collection.exists():
+        raise Http404()
+    else:
+        collection = collection[0]
+    if collection.is_meta:
+        return render(
+            request, "core/collection.html", context={
+                "now": now(),
+                "collection": collection,
+            }
+        )
+    else:
+        return render(
+            request, "core/collection.html", context={
+                "now": now(),
+                "collection": collection,
+                "talks": collection.talks.order_by('timestamp')
+            }
+        )

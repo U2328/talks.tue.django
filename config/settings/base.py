@@ -70,6 +70,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "talks_tue.core.apps.CoreConfig",
     "talks_tue.users.apps.UsersConfig",
+    "talks_tue.revisions.apps.RevisionsConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -124,6 +125,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "htmlmin.middleware.HtmlMinifyMiddleware",
     "htmlmin.middleware.MarkRequestMiddleware",
+    'django_currentuser.middleware.ThreadLocalUserMiddleware',
 ]
 
 # STATIC
