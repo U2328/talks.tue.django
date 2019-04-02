@@ -24,7 +24,7 @@
                                 <small class="text-muted">{% trans "Date:" %}</small>&nbsp;<span class="h6">{{ talk.timestamp }}</span>
                             </li>
                             <li class="list-group-item">
-                                <small class="text-muted">{% trans "Tags:" %}</small>&nbsp;<span class="h6">{% for tag in talk.tags.all %}{% include 'snippets/tag.html' with tag=tag %}{% endfor %}</span>
+                                <small class="text-muted">{% trans "Tags:" %}</small>&nbsp;<span class="h6">{% for tag in talk.tags.all %}{% include 'snippets/tag.html' with tag=tag %} {% endfor %}</span>
                             </li>
                         </ul>
                     </div>
@@ -35,7 +35,7 @@
                             </div>
                             <ul class="list-group list-group-flush">
                                 {% for collection in talk.collections.all %}
-                                    <li class="list-group-item" onclick="window.location='{% url 'core:collection' pk=collection.collection_id %}';" style="cursor: pointer;">
+                                    <li class="list-group-item" onclick="window.location='{% url 'core:collection' pk=collection.pk %}';" style="cursor: pointer;">
                                         {{ collection.title }}
                                     </li>
                                 {% endfor %}

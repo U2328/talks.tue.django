@@ -1,7 +1,7 @@
 from django.contrib import admin
 from markdownx.admin import MarkdownxModelAdmin
 
-from .models import Talk, Collection, MetaCollection, Tag
+from .models import Talk, Collection, Tag
 
 
 class MarkdownModelAdmin(MarkdownxModelAdmin):
@@ -31,12 +31,11 @@ class TalkAdmin(MarkdownModelAdmin):
         ('Links', {'fields': ('collections', 'tags')}),
     )
     list_filter = tuple()
-    raw_id_fields = tuple()
 
-@admin.register(Collection, MetaCollection)
+
+@admin.register(Collection)
 class CollectionAdmin(MarkdownModelAdmin):
     list_display = (
-        'collection_id',
         'title',
         'description',
         'organizer',
@@ -44,9 +43,8 @@ class CollectionAdmin(MarkdownModelAdmin):
     fieldsets = (
         (None, {'fields': ('title', 'description')}),
         ('Related Users', {'fields': ('organizer', 'editors')}),
-        ('Related Collections', {'fields': ('meta_collections',)}),
+        ('Related Collections', {'fields': ('is_meta', 'meta_collections',)}),
     )
     list_filter = ('organizer', 'is_meta')
-    raw_id_fields = tuple()
 
 admin.site.register(Tag)

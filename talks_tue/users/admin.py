@@ -10,11 +10,13 @@ from .forms import UserCreationForm, UserChangeForm
 
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'user',
-        'collection',
+    list_display = ('user', 'collection',)
+    list_filter = ('collection__is_meta', 'remind_me')
+    fieldsets = (
+        ('General', {'fields': ('user', 'collection')}),
+        ('Config', {'classes': ('collapse',), 'fields': (('remind_me',),)}),
     )
+    search_fields = ('user__username', 'collection__title')
 
 
 @admin.register(User)
@@ -22,23 +24,23 @@ class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('username', 'is_admin',)
-    list_filter = ('is_admin',)
+    list_display = ('username', 'is_superuser', 'is_staff', 'is_verified')
+    list_filter = ('is_superuser', 'is_staff', 'is_verified')
     fieldsets = (
-        (None, {'fields': ('username', 'password', 'email')}),
-        ('User Role & Account Management', {'fields': ('is_admin',)}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+        (None, {'fields': (('username', 'email', 'is_verified'),)}),
+        ('User Role & Account Management', {'classes': ('collapse',), 'fields': (('is_superuser', 'is_staff',),)}),
+        ('Important dates', {'classes': ('collapse',), 'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'email', 'is_admin', 'password1', 'password2')}
-         ),
+        (None, {'fields': (
+            ('username', 'email', 'is_verified'),
+            ('password1', 'password2')
+        )}),
+        ('User Role & Account Management', {'classes': ('collapse',), 'fields': (('is_superuser', 'is_staff',),)}),
     )
-    search_fields = ('username',)
-    ordering = ('-id',)
-    filter_horizontal = ()
-    readonly_fields = ('last_login', 'date_joined',)
+    search_fields = ('username', 'email')
+    ordering = ('-date_joined',)
+    readonly_fields = ('last_login', 'date_joined')
 
 
 admin.site.unregister(Group)

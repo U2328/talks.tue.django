@@ -1,15 +1,17 @@
 {% extends '../base.html' %}
 {% block content %}
-<section class="jumbotron text-center mb-0">
-    <div class="container">
-        <h1 class="jumbotron-heading">Talks.tue</h1>
-        <p class="lead text-muted">A simple way to find the best talks at hosted at our University for you.</p>
-        <p>
-            <a href="#" class="btn btn-primary my-2">Browse talks</a>
-            <a href="#" class="btn btn-outline-secondary my-2">Register to build your profile</a>
-        </p>
-    </div>
-</section>
+{% if not request.user.is_authenticated %}
+    <section class="jumbotron text-center mb-0">
+        <div class="container">
+            <h1 class="jumbotron-heading">Talks.tue</h1>
+            <p class="lead text-muted">A simple way to find the best talks at hosted at our University for you.</p>
+            <p>
+                <a href="#" class="btn btn-primary my-2">Browse talks</a>
+                <a href="{% url 'users:register' %}" class="btn btn-outline-secondary my-2">Register to build your profile</a>
+            </p>
+        </div>
+    </section>
+{% endif %}
 <div class="album py-5 bg-light">
     <div class="container">
         <div class="row">
@@ -17,12 +19,9 @@
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">{{ talk.name }}</h5>
+                        <h5 class="card-title">{{ talk.title }}</h5>
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#viewModal" data-pk="{{ talk.pk }}">View</button>
-                                <a href="{% url 'core:talk' pk=talk.pk %}" class="btn btn-sm btn-outline-secondary">Goto</a>
-                            </div>
+                            <a href="{% url 'core:talk' pk=talk.pk %}" class="btn btn-sm btn-outline-secondary">View</a>
                             <small class="text-muted">{{ talk.timestamp }}</small>
                         </div>
                     </div>

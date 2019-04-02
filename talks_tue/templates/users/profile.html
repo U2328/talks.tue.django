@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% trans 'My Profile' %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid pt-2">
+    <div class="row">
+        <div class="col-lg-8 col-sm-12 mx-auto">
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{% trans 'My Profile' %}</h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <small class="text-muted">{% trans 'Username' %}</small>
+                                {{ object.username }}
+                            </li>
+                            <li class="list-group-item">
+                                <small class="text-muted">{% trans 'EMail' %}</small>
+                                {{ object.email }}
+                            </li>
+                        </ul>
+                        <div class="card-footer">
+                            <a class="btn btn-sm btn-primary" href="{% url 'users:update_profile' %}">{% trans 'Update profile' %}</a>
+                            <a class="btn btn-sm btn-primary" href="{% url 'users:password_change' %}">{% trans 'Update password' %}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>{% trans 'My Subscriptions' %}</h4>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            {% if object.subscriptions.exists %}
+                                {% for subscription in object.subscriptions.all %}
+                                    <li class="list-group-item" onclick="window.location='{% url 'core:collection' pk=subscription.collection.pk %}';" style="cursor: pointer;">
+                                        {{ subscription.collection }}
+                                        <div class="float-right">
+                                            <a class="btn btn-sm btn-primary" href="{% url 'users:subscription' pk=subscription.pk %}">{% trans 'Configure' %}</a>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            {% else %}
+                                <li class="list-group-item">
+                                    <span class="text-muted">{% trans "No subscriptions yet." %}</span>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+

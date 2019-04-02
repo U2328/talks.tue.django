@@ -1,10 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.utils.timezone import now
 from django.utils.translation import gettext as _
 
-from .models import Talk, Collection, MetaCollection
+from .models import Talk, Collection
 
 
 def index(request):
@@ -30,25 +31,19 @@ def talk(request, pk):
 
 
 def collection(request, pk):
-    collection = Collection.objects.filter(collection_id=pk)
-    if not collection.exists():
-        collection = MetaCollection.objects.filter(collection_id=pk)
-    if not collection.exists():
-        raise Http404()
-    else:
-        collection = collection[0]
-    if collection.is_meta:
-        return render(
-            request, "core/collection.html", context={
-                "now": now(),
-                "collection": collection,
-            }
-        )
-    else:
-        return render(
-            request, "core/collection.html", context={
-                "now": now(),
-                "collection": collection,
-                "talks": collection.talks.order_by('timestamp')
-            }
-        )
+    collection = get_object_or_404(Collection, pk=pk)
+    return render(
+        request, "core/collection.html", context={
+            "now": now(),
+            "collection": collection,
+            "talks": collection.talks.order_by('timestamp'),
+            "can_subscribe": request.user.is_authenticated and not request.user.is_subscribed_to(collection)
+        }
+    )
+
+
+@login_required
+def subscribe(request, pk):
+    collection = get_object_or_404(Collection, pk=pk)
+    subscription = collection.subscriptions.create(user=request.user)
+    return redirect('users:subscription', pk=subscription.pk)

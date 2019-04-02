@@ -1,39 +1,36 @@
 from .utils import generate_revision_for
-from ..core.models import Talk, Collection, MetaCollection
+from ..core.models import Talk, Collection
 
 
 __all__ = (
-    "TalkRevision", "MetaCollectionRevision", "CollectionRevision"
+    "TalkRevision", "CollectionRevision"
 )
 
 
 @generate_revision_for(Talk)
-def TalkRevision(revision_model, original):
+def TalkRevision(revision_model, talk):
     revision = revision_model.objects.create(
-        original=original,
-        title=original.title,
-        description=original.description,
-        timestamp=original.timestamp,
-        name=original.name,
-        about_me=original.about_me,
+        original=talk,
+        title=talk.title,
+        description=talk.description,
+        timestamp=talk.timestamp,
+        name=talk.name,
+        about_me=talk.about_me,
     )
-    revision.tags.set(original.tags.all())
-    revision.collections.set(original.collections.all())
+    revision.tags.set(talk.tags.all())
+    revision.collections.set(talk.collections.all())
     return revision
 
 
-def _CollectionRevision(revision_model, original):
+@generate_revision_for(Collection)
+def CollectionRevision(revision_model, collection):
     revision = revision_model.objects.create(
-        original=original,
-        title=original.title,
-        description=original.description,
-        organizer=original.organizer,
-        is_meta=original.is_meta,
+        original=collection,
+        title=collection.title,
+        description=collection.description,
+        organizer=collection.organizer,
+        is_meta=collection.is_meta,
     )
-    revision.editors.set(original.editors.all())
-    revision.meta_collections.set(original.meta_collections.all())
+    revision.editors.set(collection.editors.all())
+    revision.meta_collections.set(collection.meta_collections.all())
     return revision
-
-
-MetaCollectionRevision = generate_revision_for(MetaCollection)(_CollectionRevision)
-CollectionRevision = generate_revision_for(Collection)(_CollectionRevision)

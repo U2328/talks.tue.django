@@ -1,57 +1,33 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, UserManager as BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils import six
 
 __all__ = (
     "UserManager",
     "User",
+    "Subscription"
 )
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, password=None):
-        if not username:
-            raise ValueError('Users must have an username address')
-        user = self.model(username=username)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, username, password=None):
-        user = self.create_user(username, password=password)
-        user.is_admin = True
-        user.save(using=self._db)
-        return user
+    def create_superuser(self, username, email, password, **extra_fields):
+        extra_fields.setdefault('is_verified', True)
+        if extra_fields.get('is_verified') is not True:
+            raise ValueError('Superuser must have is_verified=True.')
+        return super().create_superuser(username, email, password, **extra_fields)
 
 
-class User(AbstractBaseUser):
-    username = models.CharField(_('Username'), max_length=32, unique=True)
-    is_admin = models.BooleanField(_('Admin?'), default=False)
-    email = models.EmailField(_('Email address'), blank=True, null=True, unique=True)
+class User(AbstractUser):
     is_verified = models.BooleanField(_("Verified?"), default=False)
-
-    date_joined = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField(auto_now=True)
-
-    USERNAME_FIELD = 'username'
-    EMAIL_FIELD = 'email'
     objects = UserManager()
 
-    def is_staff(self):
-        return self.is_admin
-
-    def has_perm(self, perm, obj=None):
-        return True
-
-    def has_module_perms(self, app_label):
-        return True
-
-    def __str__(self):
-        return self.username
+    def is_subscribed_to(self, collection):
+        return self.subscriptions.filter(collection=collection).exists()
 
 
 class Subscription(models.Model):
@@ -59,14 +35,9 @@ class Subscription(models.Model):
         verbose_name = _("subscription")
         verbose_name_plural = _("subscriptions")
 
-    limit = models.Q(app_label='core', model='Collection') |\
-            models.Q(app_label='core', model='MetaCollection')
-    collection_type = models.ForeignKey(ContentType, limit_choices_to=limit, on_delete=models.CASCADE, related_name="subscriptions")
-    collection_pk = models.PositiveIntegerField()
-    collection = GenericForeignKey('collection_type', 'collection_pk')
-
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE)
-    remind_me = models.BooleanField(_("Remind me"))
+    collection = models.ForeignKey('core.Collection', verbose_name=_("Collection"), on_delete=models.CASCADE, related_name="subscriptions")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE, related_name="subscriptions")
+    remind_me = models.BooleanField(_("Remind me"), default=True)
 
     def __str__(self):
         return f"{self.user} -x- {self.collection}"
