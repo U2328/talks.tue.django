@@ -55,7 +55,7 @@ class BaseCollection(models.Model):
     title = models.CharField(verbose_name=_("Title"), max_length=32)
     description = MarkdownxField(verbose_name=_("Description"), max_length=512)
     organizer = models.ForeignKey(
-        settings.AUTH_USER_MODEL, models.SET_NULL, limit_choices_to={'is_staff': True}, null=True, blank=True, verbose_name=_("Oragnizer"), related_name="organized_%(class)ss"
+        settings.AUTH_USER_MODEL, models.SET_NULL, limit_choices_to={'is_staff': True}, null=True, blank=True, verbose_name=_("Organizer"), related_name="organized_%(class)ss"
     )
     editors = models.ManyToManyField(
         settings.AUTH_USER_MODEL, limit_choices_to={'is_staff': True}, verbose_name=_("Editors"), related_name="edited_%(class)ss", blank=True

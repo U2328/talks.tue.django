@@ -20,6 +20,12 @@
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-primary" type="submit" form="subscriptionForm">{% trans 'Apply changes' %}</button>
+                    <div class="float-right">
+                        <form id="deleteForm" action="{% url 'users:subscription_delete' pk=object.pk %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-primary" type="submit" form="deleteForm"><i class="far fa-trash-alt"></i></button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

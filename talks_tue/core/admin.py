@@ -30,14 +30,13 @@ class TalkAdmin(MarkdownModelAdmin):
         ('Speaker Info', {'fields': ('name', 'about_me')}),
         ('Links', {'fields': ('collections', 'tags')}),
     )
-    list_filter = tuple()
+    search_fields = ('name', 'title', 'tags__name')
 
 
 @admin.register(Collection)
 class CollectionAdmin(MarkdownModelAdmin):
     list_display = (
         'title',
-        'description',
         'organizer',
     )
     fieldsets = (
@@ -46,5 +45,6 @@ class CollectionAdmin(MarkdownModelAdmin):
         ('Related Collections', {'fields': ('is_meta', 'meta_collections',)}),
     )
     list_filter = ('organizer', 'is_meta')
+    search_fields = ('title',)
 
 admin.site.register(Tag)
