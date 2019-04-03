@@ -5,7 +5,6 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from django.views import defaults as default_views
 
-
 urlpatterns = [
     path("", include("talks_tue.core.urls", namespace="core")),
     # Django Admin, use {% url 'admin:index' %}
@@ -16,8 +15,9 @@ urlpatterns = [
     path("markdownx/", include("markdownx.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-
 if settings.DEBUG:
+    # This allows the error pages to be debugged during development, just visit
+    # these url in browser to see how these error pages look like.
     urlpatterns += [
         path(
             "400/",
@@ -35,7 +35,7 @@ if settings.DEBUG:
             kwargs={"exception": Exception("Page not Found")},
         ),
         path("500/", default_views.server_error),
-    path("rosetta/", include("rosetta.urls")),
+        path("rosetta/", include("rosetta.urls")),
     ]
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar

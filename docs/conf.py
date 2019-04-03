@@ -40,7 +40,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "Talks.Tue"
-copyright = """2019, Tim Fischer"""
+copyright = """2019, ..."""
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -184,7 +184,7 @@ latex_documents = [
         "index",
         "talks_tue.tex",
         "Talks.Tue Documentation",
-        """Tim Fischer""",
+        """...""",
         "manual",
     )
 ]
@@ -219,7 +219,7 @@ man_pages = [
         "index",
         "talks_tue",
         "Talks.Tue Documentation",
-        ["""Tim Fischer"""],
+        ["""..."""],
         1,
     )
 ]
@@ -238,9 +238,9 @@ texinfo_documents = [
         "index",
         "talks_tue",
         "Talks.Tue Documentation",
-        """Tim Fischer""",
+        """...""",
         "Talks.Tue",
-        """A simple webapp to manage talks at the Universitiy of Tübingen.""",
+        """...""",
         "Miscellaneous",
     )
 ]

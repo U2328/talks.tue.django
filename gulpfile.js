@@ -9,7 +9,9 @@ const pjson = require('./package.json')
 // Plugins
 const autoprefixer = require('autoprefixer')
 const browserSync = require('browser-sync').create()
+
 const concat = require('gulp-concat')
+
 const cssnano = require ('cssnano')
 const imagemin = require('gulp-imagemin')
 const pixrem = require('pixrem')
@@ -27,12 +29,14 @@ function pathsConfig(appName) {
   const vendorsRoot = 'node_modules'
 
   return {
+    
     bootstrapSass: `${vendorsRoot}/bootstrap/scss`,
     vendorsJs: [
       `${vendorsRoot}/jquery/dist/jquery.slim.js`,
       `${vendorsRoot}/popper.js/dist/umd/popper.js`,
       `${vendorsRoot}/bootstrap/dist/js/bootstrap.js`,
     ],
+    
     app: this.app,
     templates: `${this.app}/templates`,
     css: `${this.app}/static/css`,
@@ -63,7 +67,9 @@ function styles() {
   return src(`${paths.sass}/project.scss`)
     .pipe(sass({
       includePaths: [
+        
         paths.bootstrapSass,
+        
         paths.sass
       ]
     }).on('error', sass.logError))
@@ -84,6 +90,7 @@ function scripts() {
     .pipe(dest(paths.js))
 }
 
+
 // Vendor Javascript minification
 function vendorScripts() {
   return src(paths.vendorsJs)
@@ -94,6 +101,7 @@ function vendorScripts() {
     .pipe(rename({ suffix: '.min' }))
     .pipe(dest(paths.js))
 }
+
 
 // Image compression
 function imgCompression() {
@@ -119,6 +127,7 @@ function initBrowserSync() {
         `${paths.js}/*.js`,
         `${paths.templates}/*.html`
       ], {
+        // https://www.browsersync.io/docs/options/#option-proxy
         proxy:  {
           target: 'django:8000',
           proxyReq: [
