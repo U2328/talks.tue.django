@@ -56,15 +56,16 @@ DJANGO_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
-    "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # "django.contrib.humanize", # Handy template tags
+    "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
 ]
 THIRD_PARTY_APPS = [
     "crispy_forms",
     "rest_framework",
+    'markdownx',
+    'sequences.apps.SequencesConfig',
 ]
 LOCAL_APPS = [
     "talks_tue.core.apps.CoreConfig",
@@ -214,7 +215,7 @@ EMAIL_BACKEND = env(
 # Django Admin URL.
 ADMIN_URL = "admin/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
-ADMINS = [("""...""", "...@example.com")]
+ADMINS = [("""Tim Fischer""", "t.fischer@student.uni-tuebingen.de")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 

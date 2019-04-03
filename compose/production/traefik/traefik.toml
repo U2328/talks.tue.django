@@ -16,7 +16,7 @@ defaultEntryPoints = ["http", "https"]
 # Enable ACME (Let's Encrypt): automatic SSL
 [acme]
 # Email address used for registration
-email = "...@example.com"
+email = "t.fischer@student.uni-tuebingen.de"
 storageFile = "/etc/traefik/acme/acme.json"
 entryPoint = "https"
 onDemand = false
