@@ -4,6 +4,7 @@ from django.contrib.auth.views import LogoutView as BaseLogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin
 from django.views.generic import UpdateView, CreateView, DetailView, DeleteView
+from django.http import HttpResponseNotAllowed
 from django.utils.http import is_safe_url
 from django.utils.translation import gettext as _, gettext_lazy as _l
 from django.shortcuts import reverse, redirect, get_object_or_404
@@ -85,17 +86,17 @@ class SubscriptionUpdateView(SuccessMessageUpdateMixin, AccessMixin, UpdateView)
         return reverse("users:profile")
 
 
-class SubscriptionDeleteView(SuccessMessageUpdateMixin, AccessMixin, DeleteView):
-    model = Subscription
-    template_name = "users/subscription_delete.html"
-    success_message = _l("Subscription deleted.")
-
-    def dispatch(self, request, pk):
-        if not request.user.is_authenticated:
-            return self.handle_no_permission()
-        get_object_or_404(Subscription, pk=pk, user=request.user)
-        return super().dispatch(request, pk)
-
-    def get_success_url(self):
-        redirect_to = self.request.POST.get('next', self.request.GET.get('next', '/'))
-        return redirect_to if is_safe_url(redirect_to, self.request.get_host()) else reverse("users:profile") 
+@login_required
+def subscription_delete(request, pk):
+    if request.method == "POST":
+        subscription = get_object_or_404(Subscription, pk=pk, user=request.user)
+        subscription.delete()
+        messages.success(request, _("Subscription removed."))
+        redirect_to = request.POST.get('next') or request.GET.get('next')
+        return redirect(
+            redirect_to
+            if redirect is not None and is_safe_url(redirect_to, request.get_host()) else
+            "users:profile"
+        )
+    else:
+        raise HttpResponseNotAllowed()

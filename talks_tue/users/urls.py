@@ -52,5 +52,5 @@ urlpatterns = [
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('update/', views.ProfileUpdateView.as_view(), name='update_profile'),
     path('subscription/<int:pk>', views.SubscriptionUpdateView.as_view(), name='subscription'),
-    path('subscription/<int:pk>/delete', views.SubscriptionDeleteView.as_view(), name='subscription_delete'),
+    path('subscription/<int:pk>/delete', views.subscription_delete, name='subscription_delete'),
 ]
