@@ -86,14 +86,21 @@ class UserChangeForm(forms.ModelForm):
 class SubscriptionChangeForm(forms.ModelForm):
     class Meta:
         model = Subscription
-        fields = ('remind_me',)
+        fields = ('remind_me', 'reminder_type')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_tag = False
         self.helper.layout = Layout(
-            Div(
-                "remind_me",
+            Row(
+                Div(
+                    "remind_me",
+                    css_class='col-sm-6'
+                ),
+                Div(
+                    "reminder_type",
+                    css_class='col-sm-6'
+                ),
             )                
         )

@@ -14,7 +14,7 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_filter = ('collection__is_meta', 'remind_me')
     fieldsets = (
         ('General', {'fields': ('user', 'collection')}),
-        ('Config', {'classes': ('collapse',), 'fields': (('remind_me',),)}),
+        ('Config', {'classes': ('collapse',), 'fields': (('remind_me', 'reminder_type'),)}),
     )
     search_fields = ('user__username', 'collection__title')
 

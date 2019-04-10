@@ -39,5 +39,17 @@ class Subscription(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("User"), on_delete=models.CASCADE, related_name="subscriptions")
     remind_me = models.BooleanField(_("Remind me"), default=True)
 
+    FULL_REMINDER = 0
+    DAILY_REMINDER = 1
+    WEEKLY_REMINDER = 2
+
+    REMINDER_TYPES = (
+        (FULL_REMINDER, _("Daily and Weekly")),
+        (DAILY_REMINDER, _("Daily")),
+        (WEEKLY_REMINDER, _("Weekly")),
+    )
+
+    reminder_type = models.PositiveSmallIntegerField(_("Reminder type"), choices=REMINDER_TYPES, default=FULL_REMINDER)
+
     def __str__(self):
         return f"{self.user} -x- {self.collection}"

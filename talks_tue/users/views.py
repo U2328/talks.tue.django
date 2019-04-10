@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import AccessMixin
 from django.views.generic import UpdateView, CreateView, DetailView, DeleteView
 from django.http import HttpResponseNotAllowed
+from django.core.exceptions import PermissionDenied
 from django.utils.http import is_safe_url
 from django.utils.translation import gettext as _, gettext_lazy as _l
 from django.shortcuts import reverse, redirect, get_object_or_404
@@ -89,7 +90,9 @@ class SubscriptionUpdateView(SuccessMessageUpdateMixin, AccessMixin, UpdateView)
 @login_required
 def subscription_delete(request, pk):
     if request.method == "POST":
-        subscription = get_object_or_404(Subscription, pk=pk, user=request.user)
+        subscription = get_object_or_404(Subscription, pk=pk)
+        if subscription.user != request.user:
+            raise PermissionDenied()
         subscription.delete()
         messages.success(request, _("Subscription removed."))
         redirect_to = request.POST.get('next') or request.GET.get('next')

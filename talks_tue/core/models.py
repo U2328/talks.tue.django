@@ -69,12 +69,16 @@ class BaseCollection(models.Model):
     def tags(self):
         return list(set(
             tag
-            for collection in self.sub_collections.all()
-            for tag in collection.tags
-        )) if self.is_meta else list(set(
-            tag
-            for talk in self.talks.all()
+            for talk in self.related_talks
             for tag in talk.tags.all()
+        ))
+
+    @property
+    def related_talks(self):
+        return list(self.talks.all()) if not self.is_meta else list(set(
+            talk
+            for sub_collection in self.sub_collections.all()
+            for talk in sub_collection.related_talks
         ))
 
     def __str__(self):

@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='collectionrevision',
             name='organizer',
-            field=models.ForeignKey(blank=True, limit_choices_to={'is_staff': True}, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='organized_collectionrevisions', to=settings.AUTH_USER_MODEL, verbose_name='Oragnizer'),
+            field=models.ForeignKey(blank=True, limit_choices_to={'is_staff': True}, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='organized_collectionrevisions', to=settings.AUTH_USER_MODEL, verbose_name='Organizer'),
         ),
         migrations.AddField(
             model_name='collectionrevision',
